@@ -168,6 +168,10 @@
                                 <database>
                                     <excludes>databasechangelog|databasechangeloglock</excludes>
                                 </database>
+                                <target>
+                                    <packageName>com.mykola.railroad.db</packageName>
+                                    <directory>src/main/java</directory>
+                                </target>
                             </generator>
                         </configuration>
                     </execution>
