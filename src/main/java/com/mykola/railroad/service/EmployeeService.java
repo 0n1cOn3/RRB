@@ -2,6 +2,7 @@ package com.mykola.railroad.service;
 
 import com.mykola.railroad.dto.EmployeeDTO;
 import org.jooq.DSLContext;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +16,11 @@ public class EmployeeService {
     @Autowired
     private DSLContext dsl;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     public List<EmployeeDTO> findAllEmployees() {
-        System.out.println("niiiiggererrere");
-        return dsl.selectFrom(EMPLOYEE).fetchInto(EmployeeDTO.class);
+        return dsl.selectFrom(EMPLOYEE).fetch()
+                .map(employee -> modelMapper.map(employee, EmployeeDTO.class));
     }
 }
