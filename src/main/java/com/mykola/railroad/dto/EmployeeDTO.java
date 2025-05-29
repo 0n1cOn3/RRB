@@ -1,19 +1,14 @@
 package com.mykola.railroad.dto;
 
-import com.mykola.railroad.db.public_.tables.Employee;
+import java.math.BigDecimal;
 
-public class EmployeeDTO {
-//    public final Integer id;
-//    public final String email;
-//    public final String password;
-//    public final String firstName;
-//    public final String lastName;
-//    public final String sex;
-//    public final Integer job;
-//    public final String salaryBonus;
-//
-//    public EmployeeDTO(Employee e) {
-//        this.id = e.
-//
-//    }
-}
+public record EmployeeDTO(
+        Integer id,
+        String email,
+        String password,
+        String firstName,
+        String lastName,
+        String sex,
+        Integer job,
+        BigDecimal salaryBonus
+) {}
