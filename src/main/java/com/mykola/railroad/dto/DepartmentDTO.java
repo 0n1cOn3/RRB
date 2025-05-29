@@ -1,11 +1,9 @@
 package com.mykola.railroad.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-public class Department {
+@Data
+public class DepartmentDTO {
     public Integer id;
     public String shortTitle;
     public String title;

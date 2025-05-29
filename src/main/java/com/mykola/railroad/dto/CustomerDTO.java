@@ -1,13 +1,11 @@
 package com.mykola.railroad.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.sql.Time;
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
 public class CustomerDTO {
     public Integer id;
     private String email;

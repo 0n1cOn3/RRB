@@ -7,8 +7,6 @@ import lombok.Setter;
 @Setter
 public class EmployeeDTO {
     public Integer id;
-    private String email;
-    private String password;
     public String firstName;
     public String lastName;
     public String sex;

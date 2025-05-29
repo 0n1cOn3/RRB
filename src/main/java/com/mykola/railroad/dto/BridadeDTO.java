@@ -1,10 +1,8 @@
 package com.mykola.railroad.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class BridadeDTO {
     public Integer id;
     public Integer department;

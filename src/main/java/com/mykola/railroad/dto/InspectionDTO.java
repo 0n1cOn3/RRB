@@ -1,12 +1,10 @@
 package com.mykola.railroad.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
 public class InspectionDTO {
     public Integer id;
     public Integer train;

@@ -2,7 +2,7 @@ package com.mykola.railroad.config;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
-import org.modelmapper.spi.NameTokenizer;
+import org.modelmapper.jooq.RecordValueReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,7 +12,8 @@ public class ModelMapperConfig {
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration()
-                .setSourceNameTokenizer(NameTokenizers.UNDERSCORE);
+                .setSourceNameTokenizer(NameTokenizers.UNDERSCORE)
+                .addValueReader(new RecordValueReader());
         return modelMapper;
     }
 }

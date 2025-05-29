@@ -1,10 +1,8 @@
 package com.mykola.railroad.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class BaggageDTO {
     public Integer ticket;
     public Float weight;
