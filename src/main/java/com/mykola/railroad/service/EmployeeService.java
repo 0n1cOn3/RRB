@@ -27,7 +27,8 @@ public class EmployeeService {
     }
 
     public List<TypeACL> getEmployeeACLs(Integer employeeId) {
-        return dsl.select()
+        return dsl
+                .select(EMPLOYEE_ACL.ACL)
                 .from(EMPLOYEE_ACL)
                 .where(EMPLOYEE_ACL.EMPLOYEE.eq(employeeId))
                 .fetch()
