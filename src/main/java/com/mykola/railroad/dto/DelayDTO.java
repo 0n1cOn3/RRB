@@ -11,6 +11,7 @@ public class DelayDTO {
     public Date createdAt;
     public Time createdWhen;
     public Time delayUntil;
+    public TypeDelay delayType;
     public Integer delayService;
     public Boolean cancelService;
 }

@@ -6,5 +6,5 @@ import lombok.Data;
 public class BaggageDTO {
     public Integer ticket;
     public Float weight;
-    public String status;
+    public TypeBaggageStatus status;
 }

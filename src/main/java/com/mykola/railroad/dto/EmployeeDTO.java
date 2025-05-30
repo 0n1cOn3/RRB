@@ -9,7 +9,7 @@ public class EmployeeDTO {
     public Integer id;
     public String firstName;
     public String lastName;
-    public String sex;
+    public TypeSex sex;
     public Integer job;
     public Float salaryBonus;
 }

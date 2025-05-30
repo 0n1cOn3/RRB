@@ -7,7 +7,7 @@ import java.util.Date;
 @Data
 public class TrainDTO {
     public Integer id;
-    public String trainType;
+    public TypeTrain trainType;
     public Boolean inService;
     public Integer driverBrigade;
     public Integer serviceBrigade;

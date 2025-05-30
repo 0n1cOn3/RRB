@@ -12,7 +12,7 @@ public class CustomerDTO {
     private String password;
     public String firstName;
     public String lastName;
-    public String sex;
+    public TypeSex sex;
     public Short age;
     public Date createdAt;
     public Time createdWhen;

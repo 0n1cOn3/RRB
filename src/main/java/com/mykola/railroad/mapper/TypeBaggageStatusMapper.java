@@ -1,16 +1,16 @@
 package com.mykola.railroad.mapper;
 
-import com.mykola.railroad.db.public_.enums.TypeAcl;
-import com.mykola.railroad.dto.TypeACL;
+import com.mykola.railroad.db.public_.enums.TypeBaggageSt;
+import com.mykola.railroad.dto.TypeBaggageStatus;
 import org.mapstruct.EnumMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = "spring")
-public interface TypeACLMapper {
+public interface TypeBaggageStatusMapper {
     @EnumMapping(nameTransformationStrategy = MappingConstants.CASE_TRANSFORMATION, configuration = "upper")
-    TypeACL toDto(TypeAcl record);
+    TypeBaggageStatus toDto(TypeBaggageSt record);
 
     @EnumMapping(nameTransformationStrategy = MappingConstants.CASE_TRANSFORMATION, configuration = "lower")
-    TypeAcl toJooq(TypeACL acl);
+    TypeBaggageSt toJooq(TypeBaggageStatus dto);
 }

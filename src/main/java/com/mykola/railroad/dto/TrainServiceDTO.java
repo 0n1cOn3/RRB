@@ -14,6 +14,6 @@ public class TrainServiceDTO {
     public Time departureWhen;
     public Date arrivalAt;
     public Time arrivalWhen;
-    public String status;
+    public TypeTrainStatus status;
     public Integer driver;
 }

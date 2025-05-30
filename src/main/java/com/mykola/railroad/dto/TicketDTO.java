@@ -8,6 +8,6 @@ public class TicketDTO {
     public Integer customer;
     public Integer trainService;
     public String seat;
-    public String passenger;
+    public TypePassenger passenger;
     public String status;
 }
