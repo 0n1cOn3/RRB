@@ -1,6 +1,7 @@
 package com.mykola.railroad.service;
 
 import com.mykola.railroad.db.public_.enums.TypeAcl;
+import com.mykola.railroad.db.public_.tables.records.EmployeeRecord;
 import com.mykola.railroad.dto.EmployeeDTO;
 import com.mykola.railroad.dto.TypeACL;
 import com.mykola.railroad.mapper.EmployeeMapper;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.mykola.railroad.db.public_.Tables.EMPLOYEE;
 import static com.mykola.railroad.db.public_.Tables.EMPLOYEE_ACL;
@@ -38,5 +40,13 @@ public class EmployeeService {
                 .where(EMPLOYEE_ACL.EMPLOYEE.eq(employeeId))
                 .fetch()
                 .map(r -> aclMapper.toDto(r.get(EMPLOYEE_ACL.ACL)));
+    }
+
+    public Optional<EmployeeDTO> findEmployeeByEmail(String email) {
+        return dsl
+                .selectFrom(EMPLOYEE)
+                .where(EMPLOYEE.EMAIL.eq(email))
+                .fetchOptional()
+                .map(r -> employeeMapper.toDto(r));
     }
 }

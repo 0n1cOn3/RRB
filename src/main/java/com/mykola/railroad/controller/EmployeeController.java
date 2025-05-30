@@ -19,6 +19,13 @@ public class EmployeeController {
         return employeeService.getEmployeeACLs(employeeId);
     }
 
+    // TODO: test endpoint
+    @GetMapping("/email/{email}")
+    public EmployeeDTO getEmployeeByEmail(@PathVariable("email") String email) {
+        return employeeService.findEmployeeByEmail(email)
+                .orElseThrow();
+    }
+
     @GetMapping
     public List<EmployeeDTO> findAllEmployees() {
         return employeeService.findAllEmployees();
