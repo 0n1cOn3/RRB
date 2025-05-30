@@ -7,6 +7,8 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+// TODO: !! VERY HIGH CHANGE OF UTC CLOCK SKEW !!
+
 @Mapper(componentModel = "spring")
 public class TimeDateMapper {
     public LocalTime toLocalTime(Time time) {
