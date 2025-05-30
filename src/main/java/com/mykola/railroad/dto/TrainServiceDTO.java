@@ -3,7 +3,7 @@ package com.mykola.railroad.dto;
 import lombok.Data;
 
 import java.sql.Time;
-import java.util.Date;
+import java.sql.Date;
 
 @Data
 public class TrainServiceDTO {
