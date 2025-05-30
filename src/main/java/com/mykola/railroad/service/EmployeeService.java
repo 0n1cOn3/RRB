@@ -8,9 +8,12 @@ import com.mykola.railroad.mapper.EmployeeMapper;
 import com.mykola.railroad.mapper.TypeACLMapper;
 import lombok.AllArgsConstructor;
 import org.jooq.DSLContext;
+import org.jooq.Record2;
+import org.jooq.Record3;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import security.AuthenticatedUserInfo;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,5 +51,24 @@ public class EmployeeService {
                 .where(EMPLOYEE.EMAIL.eq(email))
                 .fetchOptional()
                 .map(r -> employeeMapper.toDto(r));
+    }
+
+    public AuthenticatedUserInfo getAuthenticatedInfo(String email) {
+        Record2<Integer, String> r2 = dsl
+                .select(EMPLOYEE.ID, EMPLOYEE.PASSWORD)
+                .from(EMPLOYEE)
+                .where(EMPLOYEE.EMAIL.eq(email))
+                .fetchOne();
+        Integer id = r2.get(EMPLOYEE.ID);
+        String password = r2.get(EMPLOYEE.PASSWORD);
+
+        List<TypeACL> acls = dsl
+                .select(EMPLOYEE_ACL.ACL)
+                .from(EMPLOYEE_ACL)
+                .where(EMPLOYEE_ACL.EMPLOYEE.eq(id))
+                .fetch()
+                .map(r -> aclMapper.toDto(r.get(EMPLOYEE_ACL.ACL)));
+
+        return new AuthenticatedUserInfo(id, email, password, acls);
     }
 }
