@@ -1,7 +1,11 @@
 package com.mykola.railroad.service;
 
+import com.mykola.railroad.db.public_.enums.TypeAcl;
 import com.mykola.railroad.dto.EmployeeDTO;
 import com.mykola.railroad.dto.TypeACL;
+import com.mykola.railroad.mapper.EmployeeMapper;
+import com.mykola.railroad.mapper.TypeACLMapper;
+import lombok.AllArgsConstructor;
 import org.jooq.DSLContext;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +21,14 @@ import static java.util.stream.Collectors.mapping;
 public class EmployeeService {
     @Autowired
     private DSLContext dsl;
-
     @Autowired
-    private ModelMapper modelMapper;
+    private EmployeeMapper employeeMapper;
+    @Autowired
+    private TypeACLMapper aclMapper;
 
     public List<EmployeeDTO> findAllEmployees() {
         return dsl.selectFrom(EMPLOYEE).fetch()
-                .map(employee -> modelMapper.map(employee, EmployeeDTO.class));
+                .map(employeeMapper::toDto);
     }
 
     public List<TypeACL> getEmployeeACLs(Integer employeeId) {
@@ -32,6 +37,6 @@ public class EmployeeService {
                 .from(EMPLOYEE_ACL)
                 .where(EMPLOYEE_ACL.EMPLOYEE.eq(employeeId))
                 .fetch()
-                .map(acl -> modelMapper.map(acl, TypeACL.class));
+                .map(r -> aclMapper.toDto(r.get(EMPLOYEE_ACL.ACL)));
     }
 }

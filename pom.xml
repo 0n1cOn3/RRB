@@ -97,14 +97,14 @@
             <version>3.2.0</version>
         </dependency>
         <dependency>
-            <groupId>org.modelmapper.extensions</groupId>
-            <artifactId>modelmapper-spring</artifactId>
-            <version>3.2.0</version>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.6.2</version>
         </dependency>
         <dependency>
-            <groupId>org.modelmapper.extensions</groupId>
-            <artifactId>modelmapper-jooq</artifactId>
-            <version>3.2.0</version>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>1.6.1</version>
         </dependency>
     </dependencies>
 
@@ -122,6 +122,11 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>1.6.1</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
