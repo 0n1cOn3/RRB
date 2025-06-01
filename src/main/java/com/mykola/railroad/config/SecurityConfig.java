@@ -1,0 +1,67 @@
+package com.mykola.railroad.config;
+
+import com.mykola.railroad.service.EmployeeService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import security.CustomAccessDeniedHandler;
+import security.UserDetailsServiceImpl;
+
+import java.util.List;
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+public class SecurityConfig {
+    @Bean
+    public UserDetailsService userDetailsService(EmployeeService employeeService) {
+        return new UserDetailsServiceImpl(employeeService);
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http,
+                                                       UserDetailsService userDetailsService) throws Exception{
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(new BCryptPasswordEncoder())
+                .and()
+                .build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(csrf -> {
+                    csrf.ignoringRequestMatchers("/**");
+                })
+                .authorizeHttpRequests(auth -> {
+                    auth.anyRequest().authenticated();
+                })
+                .httpBasic(Customizer.withDefaults())
+                .exceptionHandling(exception -> {
+                    exception.accessDeniedHandler(new CustomAccessDeniedHandler());
+                })
+                .build();
+    }
+}
