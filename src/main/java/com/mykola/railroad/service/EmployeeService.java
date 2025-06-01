@@ -3,9 +3,13 @@ package com.mykola.railroad.service;
 import com.mykola.railroad.db.public_.enums.TypeAcl;
 import com.mykola.railroad.db.public_.tables.records.EmployeeRecord;
 import com.mykola.railroad.dto.EmployeeDTO;
+import com.mykola.railroad.dto.LoginDTO;
 import com.mykola.railroad.dto.TypeACL;
 import com.mykola.railroad.mapper.EmployeeMapper;
 import com.mykola.railroad.mapper.TypeACLMapper;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.Record2;
@@ -30,6 +34,8 @@ public class EmployeeService {
     private EmployeeMapper employeeMapper;
     @Autowired
     private TypeACLMapper aclMapper;
+    @Autowired
+    private LoginService loginService;
 
     public List<EmployeeDTO> findAllEmployees() {
         return dsl.selectFrom(EMPLOYEE).fetch()
@@ -53,22 +59,11 @@ public class EmployeeService {
                 .map(r -> employeeMapper.toDto(r));
     }
 
-    public AuthenticatedUserInfo getAuthenticatedInfo(String email) {
-        Record2<Integer, String> r2 = dsl
-                .select(EMPLOYEE.ID, EMPLOYEE.PASSWORD)
-                .from(EMPLOYEE)
-                .where(EMPLOYEE.EMAIL.eq(email))
-                .fetchOne();
-        Integer id = r2.get(EMPLOYEE.ID);
-        String password = r2.get(EMPLOYEE.PASSWORD);
+    public void login(LoginDTO login, HttpServletRequest req, HttpServletResponse res) {
+        loginService.createSession(login.email, login.password, req, res);
+    }
 
-        List<TypeACL> acls = dsl
-                .select(EMPLOYEE_ACL.ACL)
-                .from(EMPLOYEE_ACL)
-                .where(EMPLOYEE_ACL.EMPLOYEE.eq(id))
-                .fetch()
-                .map(r -> aclMapper.toDto(r.get(EMPLOYEE_ACL.ACL)));
-
-        return new AuthenticatedUserInfo(id, email, password, acls);
+    public void logout(HttpServletRequest req) throws ServletException {
+        loginService.destroySession(req);
     }
 }

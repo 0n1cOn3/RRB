@@ -1,6 +1,11 @@
 package com.mykola.railroad.config;
 
+import com.mykola.railroad.mapper.TypeACLMapper;
+import com.mykola.railroad.service.AuthInfoService;
 import com.mykola.railroad.service.EmployeeService;
+import lombok.AllArgsConstructor;
+import org.jooq.DSLContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,10 +28,11 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@AllArgsConstructor
 public class SecurityConfig {
     @Bean
-    public UserDetailsService userDetailsService(EmployeeService employeeService) {
-        return new UserDetailsServiceImpl(employeeService);
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsServiceImpl();
     }
 
     @Bean
@@ -56,6 +62,7 @@ public class SecurityConfig {
                     csrf.ignoringRequestMatchers("/**");
                 })
                 .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/employee/login").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults())
