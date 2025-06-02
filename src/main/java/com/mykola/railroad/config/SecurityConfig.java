@@ -24,7 +24,7 @@ import com.mykola.railroad.security.UserDetailsServiceImpl;
 import java.util.List;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 @AllArgsConstructor
 public class SecurityConfig {
@@ -71,9 +71,9 @@ public class SecurityConfig {
                     csrf.ignoringRequestMatchers("/**");
                 })
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/employee/**").authenticated();
-                    auth.requestMatchers(HttpMethod.POST, "/login/employee").permitAll();
-                    auth.requestMatchers(HttpMethod.DELETE, "/login/employee").authenticated();
+//                    auth.requestMatchers("/employee/**").authenticated();
+//                    auth.requestMatchers(HttpMethod.POST, "/login/employee").permitAll();
+//                    auth.requestMatchers(HttpMethod.DELETE, "/login/employee").authenticated();
                     auth.anyRequest().permitAll();
                 })
                 .httpBasic(Customizer.withDefaults())
