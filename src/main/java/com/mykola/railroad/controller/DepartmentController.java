@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/department")
@@ -19,5 +20,10 @@ public class DepartmentController {
     @GetMapping("/{id}/employee")
     public List<EmployeeDTO> getDepartmentEmployees(@PathVariable("id") Integer id) {
         return departmentService.getDepartmentEmployees(id);
+    }
+
+    @GetMapping("/head")
+    public Map<Integer, EmployeeDTO> getDepartmentHeads() {
+        return departmentService.getDepartmentHeads();
     }
 }
