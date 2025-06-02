@@ -76,8 +76,9 @@ public class SecurityConfig {
                     csrf.ignoringRequestMatchers("/**");
                 })
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/employee").authenticated();
-                    auth.requestMatchers(HttpMethod.POST, "/employee/login").permitAll();
+                    auth.requestMatchers("/employee/**").authenticated();
+                    auth.requestMatchers(HttpMethod.POST, "/login/employee").permitAll();
+                    auth.requestMatchers(HttpMethod.DELETE, "/login/employee").authenticated();
                 })
                 .httpBasic(Customizer.withDefaults())
                 .exceptionHandling(exception -> {
