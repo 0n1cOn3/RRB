@@ -1,4 +1,4 @@
-package security;
+package com.mykola.railroad.security;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

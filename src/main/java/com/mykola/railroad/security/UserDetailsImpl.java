@@ -1,7 +1,5 @@
-package security;
+package com.mykola.railroad.security;
 
-import com.mykola.railroad.dto.EmployeeDTO;
-import com.mykola.railroad.dto.TypeACL;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

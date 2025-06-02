@@ -1,4 +1,4 @@
-package security;
+package com.mykola.railroad.security;
 
 import com.mykola.railroad.service.AuthInfoService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package security;
+package com.mykola.railroad.security;
 
 import com.mykola.railroad.dto.TypeACL;
 import lombok.AllArgsConstructor;

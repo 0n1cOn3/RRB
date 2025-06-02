@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
-import security.UserDetailsImpl;
+import com.mykola.railroad.security.UserDetailsImpl;
 
 import java.util.Optional;
 

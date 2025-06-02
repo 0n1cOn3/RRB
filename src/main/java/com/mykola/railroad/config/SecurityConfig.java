@@ -1,11 +1,6 @@
 package com.mykola.railroad.config;
 
-import com.mykola.railroad.mapper.TypeACLMapper;
-import com.mykola.railroad.service.AuthInfoService;
-import com.mykola.railroad.service.EmployeeService;
 import lombok.AllArgsConstructor;
-import org.jooq.DSLContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,8 +18,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import security.CustomAccessDeniedHandler;
-import security.UserDetailsServiceImpl;
+import com.mykola.railroad.security.CustomAccessDeniedHandler;
+import com.mykola.railroad.security.UserDetailsServiceImpl;
 
 import java.util.List;
 
@@ -79,6 +74,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/employee/**").authenticated();
                     auth.requestMatchers(HttpMethod.POST, "/login/employee").permitAll();
                     auth.requestMatchers(HttpMethod.DELETE, "/login/employee").authenticated();
+                    auth.anyRequest().permitAll();
                 })
                 .httpBasic(Customizer.withDefaults())
                 .exceptionHandling(exception -> {

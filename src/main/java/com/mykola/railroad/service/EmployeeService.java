@@ -1,7 +1,5 @@
 package com.mykola.railroad.service;
 
-import com.mykola.railroad.db.public_.enums.TypeAcl;
-import com.mykola.railroad.db.public_.tables.records.EmployeeRecord;
 import com.mykola.railroad.dto.EmployeeDTO;
 import com.mykola.railroad.dto.LoginDTO;
 import com.mykola.railroad.dto.TypeACL;
@@ -10,21 +8,15 @@ import com.mykola.railroad.mapper.TypeACLMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import org.jooq.DSLContext;
-import org.jooq.Record2;
-import org.jooq.Record3;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import security.AuthenticatedUserInfo;
 
 import java.util.List;
 import java.util.Optional;
 
 import static com.mykola.railroad.db.public_.Tables.EMPLOYEE;
 import static com.mykola.railroad.db.public_.Tables.EMPLOYEE_ACL;
-import static java.util.stream.Collectors.mapping;
 
 @Service
 public class EmployeeService {
