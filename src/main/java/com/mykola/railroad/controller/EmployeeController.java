@@ -1,8 +1,10 @@
 package com.mykola.railroad.controller;
 
 import com.mykola.railroad.dto.EmployeeDTO;
+import com.mykola.railroad.dto.EmployeeSearchDTO;
 import com.mykola.railroad.dto.TypeACL;
 import com.mykola.railroad.service.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,11 @@ public class EmployeeController {
     @GetMapping("/{id}/acl")
     public List<TypeACL> getEmployeeACLs(@PathVariable("id") Integer employeeId) {
         return employeeService.getEmployeeACLs(employeeId);
+    }
+
+    @PostMapping("/search")
+    public List<EmployeeDTO> searchEmployees(@RequestBody @Valid EmployeeSearchDTO search) {
+        return employeeService.search(search);
     }
 
     // TODO: test endpoint

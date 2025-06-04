@@ -1,6 +1,8 @@
 package com.mykola.railroad.service;
 
 import com.mykola.railroad.dto.EmployeeDTO;
+import com.mykola.railroad.dto.EmployeeSearchDTO;
+import com.mykola.railroad.dto.EmployeeSearchDTO.*;
 import com.mykola.railroad.dto.LoginDTO;
 import com.mykola.railroad.dto.TypeACL;
 import com.mykola.railroad.mapper.EmployeeMapper;
@@ -9,14 +11,16 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.mykola.railroad.db.public_.Tables.EMPLOYEE;
 import static com.mykola.railroad.db.public_.Tables.EMPLOYEE_ACL;
+import static org.jooq.impl.DSL.currentDate;
+import static org.jooq.impl.DSL.year;
 
 @Service
 public class EmployeeService {
@@ -57,5 +61,26 @@ public class EmployeeService {
 
     public void logout(HttpServletRequest req) throws ServletException {
         loginService.destroySession(req);
+    }
+
+    public List<EmployeeDTO> search(EmployeeSearchDTO search) {
+        List<EmployeeDTO> employees = new LinkedList<>();
+        // за стажем роботи на станції,
+        if (search.experience.isPresent()) {
+            ByExperience experience = search.experience.get();
+            employees.addAll(dsl
+                    .selectFrom(EMPLOYEE)
+                    .where(
+                            currentDate().subtract(EMPLOYEE.EMPLOYED_AT)
+                                    .div(Calendar.YEAR).cast(Integer.class)
+                                    .add(EMPLOYEE.EXPERIENCE)
+                            .between(experience.min, experience.max))
+                    .fetch()
+                    .map(r -> employeeMapper.toDto(r.into(EMPLOYEE)))
+            );
+        }
+
+        // error
+        return employees;
     }
 }

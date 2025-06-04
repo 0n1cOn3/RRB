@@ -32,6 +32,12 @@ CREATE TABLE employee (
     last_name       VARCHAR         NOT NULL,
 
     sex             type_sex        NOT NULL,
+    children        SMALLINT        NOT NULL,
+
+    -- job experience before this employment, to get current experience
+    -- subtract employed_at from CURRENT_DATE and add it to experience, round to 1
+    experience      SMALLINT        NOT NULL,
+    employed_at     DATE            NOT NULL DEFAULT CURRENT_DATE,
 
     job             INTEGER         REFERENCES job(id) NOT NULL,
     salary_bonus    DECIMAL         DEFAULT(0)
