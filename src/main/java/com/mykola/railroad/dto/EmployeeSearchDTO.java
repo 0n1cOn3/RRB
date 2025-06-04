@@ -40,11 +40,11 @@ public class EmployeeSearchDTO {
         public @NotNull Float max;
     }
 
-    public Optional<ByExperience> experience;
-    public Optional<BySex> sex;
-    public Optional<ByAge> age;
-    public Optional<ByChildren> children;
-    public Optional<BySalary> salary;
+    public Optional<ByExperience> experience = Optional.empty();
+    public Optional<BySex> sex = Optional.empty();
+    public Optional<ByAge> age = Optional.empty();
+    public Optional<ByChildren> children = Optional.empty();
+    public Optional<BySalary> salary = Optional.empty();
 
     public void setExperience(ByExperience experience) {
         this.experience = Optional.of(experience);
@@ -60,5 +60,9 @@ public class EmployeeSearchDTO {
 
     public void setChildren(ByChildren children) {
         this.children = Optional.of(children);
+    }
+
+    public void setSalary(BySalary salary) {
+        this.salary = Optional.of(salary);
     }
 }

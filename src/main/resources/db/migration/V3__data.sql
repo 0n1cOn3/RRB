@@ -17,21 +17,21 @@ INSERT INTO job (id, short_title, title, salary) VALUES
 -- SELECT crypt('1', gen_salt('bf', 10));
 -- $2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW
 
-INSERT INTO employee (id,first_name, last_name, email, password, sex, children, job, experience, salary_bonus) VALUES
-(1,'Mykola','Admin','admin@railroad.org',         '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 0, 2, 999, 9999999), -- sysop
-(2,'John','Doe', 'john.doe@railroad.org',         '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 1, 2, 4, 200),     -- driver
-(3,'Jane', 'Smith','jane.smith@railroad.org',     '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','female', 2, 2, 1, 300),   -- driver + manager
-(4,'Mike', 'Brown', 'mike.brown@railroad.org',    '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 1, 3, 2, 100),     -- repairmen
-(5,'Alice', 'Davis', 'alice.davis@railroad.org',  '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','female', 0, 4, 0, 150),   -- finance
-(6,'Bob', 'Wilson', 'bob.wilson@railroad.org',    '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 0, 5, 0, 0),       -- manager
-(7,'Eve', 'Taylor', 'eve.taylor@railroad.org',    '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','female', 1, 6, 1, 500),   -- repairmen
-(8,'Tom', 'Harris', 'tom.harris@railroad.org',    '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 1, 7, 5, 50),      -- repairmen
-(9,'Laura', 'Clark', 'laura.clark@railroad.org',  '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','female', 1, 8, 5, 100),   -- repairmen
-(10,'Steve', 'Adams', 'steve.adams@railroad.org', '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 2, 9, 2, 200),     -- repairmen
-(11,'Nina', 'Morris', 'nina.morris@railroad.org', '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','female', 1, 10, 0, 300),  -- repairmen
-(12,'James', 'King', 'james.king@railroad.org',   '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 0, 11, 5, 50),     -- driver + manager
-(13,'Sophia', 'Lee', 'sophia.lee@railroad.org',   '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','female', 0, 12, 3, 150),  -- driver + manager
-(14,'George', 'Hall', 'george.hall@railroad.org', '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 0, 13, 9, 100);    -- driver + manager + finance
+INSERT INTO employee (id,first_name, last_name, email, password, sex, children, birthday, job, experience, salary_bonus) VALUES
+(1,'Mykola','Admin','admin@railroad.org',         '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 0, '2002-12-23', 2, 999, 9999999), -- sysop
+(2,'John','Doe', 'john.doe@railroad.org',         '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 1, '2001-07-20', 2, 4, 200),     -- driver
+(3,'Jane', 'Smith','jane.smith@railroad.org',     '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','female', 2,'1989-12-22', 2, 1, 300),   -- driver + manager
+(4,'Mike', 'Brown', 'mike.brown@railroad.org',    '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 1,'1991-02-11', 3, 2, 100),     -- repairmen
+(5,'Alice', 'Davis', 'alice.davis@railroad.org',  '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','female', 0,'1996-06-17', 4, 0, 150),   -- finance
+(6,'Bob', 'Wilson', 'bob.wilson@railroad.org',    '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 0,'1987-09-10', 5, 0, 0),       -- manager
+(7,'Eve', 'Taylor', 'eve.taylor@railroad.org',    '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','female', 1,'1992-10-13', 6, 1, 500),   -- repairmen
+(8,'Tom', 'Harris', 'tom.harris@railroad.org',    '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 1, '2001-12-24',7, 5, 50),      -- repairmen
+(9,'Laura', 'Clark', 'laura.clark@railroad.org',  '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','female', 1, '1983-01-05',8, 5, 100),   -- repairmen
+(10,'Steve', 'Adams', 'steve.adams@railroad.org', '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 2, '1998-03-18',9, 2, 200),     -- repairmen
+(11,'Nina', 'Morris', 'nina.morris@railroad.org', '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','female', 1, '1990-12-14',10, 0, 300),  -- repairmen
+(12,'James', 'King', 'james.king@railroad.org',   '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 0, '1999-02-05',11, 5, 50),     -- driver + manager
+(13,'Sophia', 'Lee', 'sophia.lee@railroad.org',   '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','female', 0, '1994-10-03',12, 3, 150),  -- driver + manager
+(14,'George', 'Hall', 'george.hall@railroad.org', '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 0, '1994-10-07',13, 9, 100);    -- driver + manager + finance
 
 INSERT INTO employee_acl (employee, acl) VALUES
 (1,'sysop'),        -- Mykola, sysop

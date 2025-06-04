@@ -1,12 +1,10 @@
 package com.mykola.railroad.service;
 
-import com.mykola.railroad.dto.EmployeeDTO;
-import com.mykola.railroad.dto.EmployeeSearchDTO;
+import com.mykola.railroad.dto.*;
 import com.mykola.railroad.dto.EmployeeSearchDTO.*;
-import com.mykola.railroad.dto.LoginDTO;
-import com.mykola.railroad.dto.TypeACL;
 import com.mykola.railroad.mapper.EmployeeMapper;
 import com.mykola.railroad.mapper.TypeACLMapper;
+import com.mykola.railroad.mapper.TypeSexMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,6 +28,8 @@ public class EmployeeService {
     private EmployeeMapper employeeMapper;
     @Autowired
     private TypeACLMapper aclMapper;
+    @Autowired
+    private TypeSexMapper sexMapper;
     @Autowired
     private LoginService loginService;
 
@@ -64,7 +64,7 @@ public class EmployeeService {
     }
 
     public List<EmployeeDTO> search(EmployeeSearchDTO search) {
-        List<EmployeeDTO> employees = new LinkedList<>();
+        HashSet<EmployeeDTO> employees = new HashSet<>();
         // за стажем роботи на станції,
         if (search.experience.isPresent()) {
             ByExperience experience = search.experience.get();
@@ -80,7 +80,27 @@ public class EmployeeService {
             );
         }
 
+        // статевою ознакою
+        if (search.sex.isPresent()) {
+            com.mykola.railroad.db.public_.enums.TypeSex sex = sexMapper.toJooq(search.sex.get().sex);
+            employees.addAll(dsl
+                    .selectFrom(EMPLOYEE)
+                    .where(EMPLOYEE.SEX.eq(sex))
+                    .fetch()
+                    .map(employeeMapper::toDto)
+            );
+        }
+
+//        // віком
+//        if (search.age.isPresent()) {
+//            ByAge age = search.age.get();
+//            employees.addAll(dsl
+//                    .selectFrom(EMPLOYEE)
+//                    //.where(EMPLOYEE.)
+//            );
+//        }
+
         // error
-        return employees;
+        return employees.stream().toList();
     }
 }

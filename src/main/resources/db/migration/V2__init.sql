@@ -34,6 +34,8 @@ CREATE TABLE employee (
     sex             type_sex        NOT NULL,
     children        SMALLINT        NOT NULL,
 
+    birthday        DATE            NOT NULL,
+
     -- job experience before this employment, to get current experience
     -- subtract employed_at from CURRENT_DATE and add it to experience, round to 1
     experience      SMALLINT        NOT NULL,
