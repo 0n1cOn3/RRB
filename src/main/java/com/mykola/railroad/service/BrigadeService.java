@@ -58,6 +58,7 @@ public class BrigadeService {
                 .from(TRAIN)
                 .join(BRIGADE).on(BRIGADE.ID.eq(TRAIN.SERVICE_BRIGADE))
                 .join(BRIGADE_EMPLOYEES).on(BRIGADE_EMPLOYEES.BRIGADE.eq(BRIGADE.ID))
+                .join(EMPLOYEE).on(BRIGADE_EMPLOYEES.EMPLOYEE.eq(EMPLOYEE.ID))
                 .where(TRAIN.ID.eq(train))
                 .fetch()
                 .map(r -> employeeMapper.toDto(r.into(EMPLOYEE)));
