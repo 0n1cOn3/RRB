@@ -9,14 +9,17 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jooq.DSLContext;
+import org.jooq.DatePart;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import static com.mykola.railroad.db.public_.Tables.EMPLOYEE;
 import static com.mykola.railroad.db.public_.Tables.EMPLOYEE_ACL;
+import static com.mykola.railroad.db.public_.tables.Job.JOB;
 import static org.jooq.impl.DSL.currentDate;
 import static org.jooq.impl.DSL.year;
 
@@ -74,7 +77,7 @@ public class EmployeeService {
                             currentDate().subtract(EMPLOYEE.EMPLOYED_AT)
                                     .div(Calendar.YEAR).cast(Integer.class)
                                     .add(EMPLOYEE.EXPERIENCE)
-                            .between(experience.min, experience.max))
+                                    .between(experience.min, experience.max))
                     .fetch()
                     .map(r -> employeeMapper.toDto(r.into(EMPLOYEE)))
             );
@@ -91,14 +94,49 @@ public class EmployeeService {
             );
         }
 
-//        // віком
-//        if (search.age.isPresent()) {
-//            ByAge age = search.age.get();
-//            employees.addAll(dsl
-//                    .selectFrom(EMPLOYEE)
-//                    //.where(EMPLOYEE.)
-//            );
-//        }
+        // віком
+        if (search.age.isPresent()) {
+            ByAge age = search.age.get();
+            employees.addAll(dsl
+                    .selectFrom(EMPLOYEE)
+                    .where(
+                            DSL.extract(currentDate(), DatePart.YEAR)
+                                    .subtract(DSL.extract(EMPLOYEE.BIRTHDAY, DatePart.YEAR))
+                                    .cast(Integer.class)
+                                    .between(age.min, age.max)
+                    )
+                    .fetch()
+                    .map(employeeMapper::toDto)
+            );
+        }
+
+        // ознакою наявності та кількості дітей
+        if (search.children.isPresent()) {
+            ByChildren children = search.children.get();
+            employees.addAll(dsl
+                    .selectFrom(EMPLOYEE)
+                    .where(EMPLOYEE.CHILDREN.cast(Integer.class)
+                            .between(children.min, children.max))
+                    .fetch()
+                    .map(employeeMapper::toDto)
+            );
+        }
+
+        // розміру заробітної плати
+        if (search.salary.isPresent()) {
+            BySalary salary = search.salary.get();
+            employees.addAll(dsl
+                    .select()
+                    .from(EMPLOYEE)
+                    .join(JOB).on(EMPLOYEE.JOB.eq(JOB.ID))
+                    .where(
+                            JOB.SALARY.add(EMPLOYEE.SALARY_BONUS)
+                                    .between(new BigDecimal(salary.min), new BigDecimal(salary.max))
+                    )
+                    .fetch()
+                    .map(r -> employeeMapper.toDto(r.into(EMPLOYEE)))
+            );
+        }
 
         // error
         return employees.stream().toList();
