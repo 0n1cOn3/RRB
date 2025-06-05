@@ -213,15 +213,15 @@ INSERT INTO ticket (customer, train_service, seat, cost, passenger, status) VALU
 
 INSERT INTO delay (created_at, created_when, delay_until, delay_type, delay_service, cancel_service) VALUES
 ('2025-05-22', '08:00', '08:10', 'service', 1, FALSE),
-('2025-05-23', '09:30', '09:45', 'legal', 2, FALSE),
+('2025-05-23', '09:30', '09:45', 'legal', 2, TRUE),
 ('2025-05-24', '07:00', '07:05', 'service', 3, FALSE),
 ('2025-05-25', '14:00', '14:20', 'service', 4, FALSE),
-('2025-05-26', '10:00', '10:12', 'legal', 5, FALSE),
+('2025-05-26', '10:00', '10:12', 'legal', 5, TRUE),
 ('2025-05-27', '06:00', '06:30', 'service', 6, FALSE),
-('2025-05-28', '09:00', '09:08', 'legal', 7, FALSE),
+('2025-05-28', '09:00', '09:08', 'legal', 7, TRUE),
 ('2025-05-29', '15:00', '15:25', 'service', 8, FALSE),
 ('2025-05-30', '08:30', '08:37', 'service', 9, FALSE),
-('2025-05-31', '10:30', '10:48', 'legal', 10, FALSE);
+('2025-05-31', '10:30', '10:48', 'legal', 10, TRUE);
 
 INSERT INTO baggage (ticket, weight, status) VALUES
 (1, 20.0, 'ok'),
