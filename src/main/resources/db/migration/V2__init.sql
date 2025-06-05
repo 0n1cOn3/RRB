@@ -209,6 +209,7 @@ CREATE TABLE ticket (
     customer        INTEGER         REFERENCES customer(id) NOT NULL,
     train_service   INTEGER         REFERENCES train_service(id) NOT NULL,
     seat            VARCHAR         NOT NULL,
+    cost            FLOAT           NOT NULL,
     passenger       type_passenger  NOT NULL DEFAULT('regular'),
     status          type_ticket_st  NOT NULL DEFAULT('ok')
 );
