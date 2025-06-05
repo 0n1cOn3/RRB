@@ -3,6 +3,7 @@ package com.mykola.railroad.controller;
 import com.mykola.railroad.dto.AvgSalaryDTO;
 import com.mykola.railroad.dto.EmployeeDTO;
 import com.mykola.railroad.dto.EmployeeSearchDTO;
+import com.mykola.railroad.dto.MedicalExamSearchDTO;
 import com.mykola.railroad.service.BrigadeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,10 @@ public class BrigadeController {
     @GetMapping("/{id}/employee")
     public List<EmployeeDTO> getBrigadeEmployees(@PathVariable Integer id) {
         return brigadeService.getBrigadeEmployees(id);
+    }
+
+    @PostMapping("/driver/medical/search")
+    public List<EmployeeDTO> searchDriverMedicalExams(@RequestBody @Valid MedicalExamSearchDTO search) {
+        return brigadeService.searchDriverMedicalExams(search);
     }
 }
