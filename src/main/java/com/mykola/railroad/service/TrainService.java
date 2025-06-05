@@ -16,8 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static com.mykola.railroad.db.public_.Tables.*;
-import static org.jooq.impl.DSL.count;
-import static org.jooq.impl.DSL.select;
+import static org.jooq.impl.DSL.*;
 
 @Service
 public class TrainService {
@@ -48,10 +47,15 @@ public class TrainService {
 
     public List<AggregateTrainInfoDTO> aggregateTrainInfo() {
         return dsl
-                .select(DSL.asterisk(), select(count())
-                        .from(ROUTE_STATION)
-                        .where(ROUTE_STATION.ROUTE.eq(TRAIN_SERVICE.ROUTE))
-                        .asField("route_length")
+                .select(DSL.asterisk(),
+                        select(count())
+                                .from(ROUTE_STATION)
+                                .where(ROUTE_STATION.ROUTE.eq(TRAIN_SERVICE.ROUTE))
+                                .asField("route_length"),
+                        select(avg(TICKET.COST))
+                                .from(TICKET)
+                                .where(TICKET.TRAIN_SERVICE.eq(TRAIN_SERVICE.ID))
+                                .asField("ticket_cost")
                 )
                 .from(TRAIN)
                 .join(TRAIN_SERVICE).on(TRAIN_SERVICE.TRAIN.eq(TRAIN.ID))
@@ -60,7 +64,7 @@ public class TrainService {
                         trainMapper.toDto(r.into(TRAIN)),
                         trainServiceMapper.toDto(r.into(TRAIN_SERVICE)),
                         r.get("route_length", Integer.class),
-                        null)
+                        r.get("ticket_cost", Float.class))
                 );
     }
 }
