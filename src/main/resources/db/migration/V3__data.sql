@@ -119,6 +119,9 @@ INSERT INTO train (train_type, in_service, driver_brigade, service_brigade, inst
 ('special', FALSE, 5, 8, '2023-02-12'),
 ('passenger', TRUE, 6, 9, '2023-04-18');
 
+INSERT INTO inspection (train, type, inspected_at, status, description) VALUES
+(1, 'planned', '2023-05-22', TRUE, 'Good');
+
 INSERT INTO station (name) VALUES
 ('Central Station'),
 ('North Station'),
