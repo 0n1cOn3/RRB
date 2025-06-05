@@ -157,6 +157,7 @@ CREATE TABLE route_station (
 
     PRIMARY KEY(route, station)
 );
+CREATE INDEX idx_route_station_order ON route_station(ordered);
 
 -- train service (run)
 CREATE TYPE type_train_st AS ENUM('ok', 'completed', 'delayed', 'canceled');
@@ -170,7 +171,12 @@ CREATE TABLE train_service (
     arrival_at      DATE            NOT NULL,
     arrival_when    TIME            NOT NULL,
     status          type_train_st   NOT NULL DEFAULT('ok'),
-    driver          INTEGER         REFERENCES employee(id) NOT NULL
+    driver          INTEGER         REFERENCES employee(id) NOT NULL,
+
+    station         INTEGER         NOT NULL,
+    next_station_at  TIME           NOT NULL,
+
+    FOREIGN KEY (route, station) REFERENCES route_station(route, station)
 );
 
 -- passengers (customers)
