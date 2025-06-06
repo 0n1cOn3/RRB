@@ -190,26 +190,26 @@ INSERT INTO customer (id, first_name, last_name, email, password, sex, age) VALU
 (9,'Mason', 'Young',        'mason.young@contoso.com','$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 39),
 (10,'Ella', 'Hill',         'ella.hill@contoso.com','$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','female', 35);
 
-INSERT INTO ticket (customer, train_service, seat, cost, passenger, status) VALUES
-(1, 1, 'A1', 500, 'regular', 'ok'),
-(2, 2, 'B2', 800, 'vip', 'ok'),
-(3, 3, 'C3', 500, 'regular', 'ok'),
-(4, 4, 'D4', 550, 'regular', 'ok'),
-(5, 5, 'E5', 800, 'vip', 'ok'),
-(6, 6, 'F6', 100, 'regular', 'ok'),
-(7, 7, 'G7', 200, 'regular', 'ok'),
-(8, 8, 'H8', 1000, 'vip', 'ok'),
-(9, 9, 'I9', 700, 'regular', 'ok'),
-(1, 10, 'J10', 500, 'regular', 'ok'),
-(2, 1, 'K11', 500, 'regular', 'ok'),
-(2, 2, 'L12', 700, 'vip', 'ok'),
-(3, 3, 'M13', 400, 'regular', 'ok'),
-(4, 4, 'N14', 400, 'regular', 'ok'),
-(5, 5, 'O15', 700, 'vip', 'ok'),
-(6, 6, 'P16', 400, 'regular', 'ok'),
-(7, 7, 'Q17', 400, 'regular', 'ok'),
-(8, 8, 'R18', 900, 'vip', 'ok'),
-(9, 9, 'S19', 450, 'regular', 'ok');
+INSERT INTO ticket (customer, train_service, seat, cost, sold_at, passenger, status) VALUES
+(1, 1, 'A1', 500, '2025-04-08', 'regular', 'ok'),
+(2, 2, 'B2', 800, '2025-04-10', 'vip', 'ok'),
+(3, 3, 'C3', 500,'2025-04-14', 'regular', 'ok'),
+(4, 4, 'D4', 550,'2025-04-17', 'regular', 'ok'),
+(5, 5, 'E5', 800,'2025-04-18', 'vip', 'ok'),
+(6, 6, 'F6', 100,'2025-04-24', 'regular', 'ok'),
+(7, 7, 'G7', 200,'2025-04-25', 'regular', 'ok'),
+(8, 8, 'H8', 1000,'2025-04-29', 'vip', 'ok'),
+(9, 9, 'I9', 700,'2025-04-30', 'regular', 'ok'),
+(1, 10, 'J10', 500,'2025-05-05', 'regular', 'ok'),
+(2, 1, 'K11', 500,'2025-05-06', 'regular', 'ok'),
+(2, 2, 'L12', 700,'2025-05-14', 'vip', 'ok'),
+(3, 3, 'M13', 400,'2025-05-15', 'regular', 'ok'),
+(4, 4, 'N14', 400,'2025-05-20', 'regular', 'ok'),
+(5, 5, 'O15', 700,'2025-05-21', 'vip', 'ok'),
+(6, 6, 'P16', 400,'2025-05-26', 'regular', 'ok'),
+(7, 7, 'Q17', 400,'2025-05-27', 'regular', 'ok'),
+(8, 8, 'R18', 900,'2025-06-02', 'vip', 'ok'),
+(9, 9, 'S19', 450,'2025-06-04', 'regular', 'ok');
 
 INSERT INTO delay (created_at, created_when, delay_until, delay_type, delay_service, cancel_service) VALUES
 ('2025-05-22', '08:00', '08:10', 'service', 1, FALSE),
