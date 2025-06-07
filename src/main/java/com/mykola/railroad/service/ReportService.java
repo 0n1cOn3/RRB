@@ -1,16 +1,22 @@
 package com.mykola.railroad.service;
 
+import com.mykola.railroad.db.public_.enums.TypeTicketSt;
+import com.mykola.railroad.db.public_.enums.TypeTrainSt;
 import com.mykola.railroad.dto.*;
 import com.mykola.railroad.mapper.*;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.DatePart;
 import org.jooq.Record;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static com.mykola.railroad.db.public_.Tables.*;
@@ -40,25 +46,25 @@ public class ReportService {
                     .where(DEPARTMENT_EMPLOYEE.HEAD.isTrue())));
         }
         if (search != null) {
-            if (search.getExperience().isPresent()) {
-                var ex = search.getExperience().get();
-                c = c.and(EMPLOYEE.EXPERIENCE.between(ex.getMin(), ex.getMax()));
+            if (search.experience.isPresent()) {
+                var ex = search.experience.get();
+                c = c.and(EMPLOYEE.EXPERIENCE.between(ex.min.shortValue(), ex.max.shortValue()));
             }
-            if (search.getSex().isPresent()) {
-                var s = search.getSex().get();
+            if (search.sex.isPresent()) {
+                var s = search.sex.get();
                 c = c.and(EMPLOYEE.SEX.eq(typeSexMapper.toJooq(s.getSex())));
             }
-            if (search.getAge().isPresent()) {
-                var a = search.getAge().get();
+            if (search.age.isPresent()) {
+                var a = search.age.get();
                 c = c.and(DSL.condition("EXTRACT(YEAR FROM AGE({0})) between {1} and {2}", EMPLOYEE.BIRTHDAY, a.getMin(), a.getMax()));
             }
-            if (search.getChildren().isPresent()) {
-                var ch = search.getChildren().get();
-                c = c.and(EMPLOYEE.CHILDREN.between(ch.getMin(), ch.getMax()));
+            if (search.children.isPresent()) {
+                var ch = search.children.get();
+                c = c.and(EMPLOYEE.CHILDREN.between(ch.min.shortValue(), ch.max.shortValue()));
             }
-            if (search.getSalary().isPresent()) {
-                var sal = search.getSalary().get();
-                c = c.and(JOB.SALARY.add(EMPLOYEE.SALARY_BONUS).between(sal.getMin(), sal.getMax()));
+            if (search.salary.isPresent()) {
+                var sal = search.salary.get();
+                c = c.and(JOB.SALARY.add(EMPLOYEE.SALARY_BONUS).between(new BigDecimal(sal.min), new BigDecimal(sal.max)));
             }
         }
 
@@ -105,7 +111,7 @@ public class ReportService {
 
     /** Task 3 */
     public ListResult<EmployeeDTO> medicalExams(MedicalExamSearchDTO search) {
-        Condition c = MEDICAL_EXAM.CREATED_AT.year().eq(search.getYear())
+        Condition c = DSL.extract(MEDICAL_EXAM.CREATED_AT, DatePart.YEAR).eq(search.getYear())
                 .and(MEDICAL_EXAM.VERDICT_GOOD.eq(search.getVerdict()));
         List<EmployeeDTO> data = dsl.select(EMPLOYEE.fields())
                 .from(MEDICAL_EXAM)
@@ -117,7 +123,10 @@ public class ReportService {
     }
 
     /** Task 4 */
-    public ListResult<TrainDTO> trainsAtStation(Integer station, Date at) {
+    public ListResult<TrainDTO> trainsAtStation(Integer station, String atStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate at = LocalDate.parse(atStr, formatter);
+
         Condition c = TRAIN_SERVICE.STATION.eq(station);
         if (at != null) {
             c = c.and(TRAIN_SERVICE.DEPARTURE_AT.le(at)).and(TRAIN_SERVICE.ARRIVAL_AT.ge(at));
@@ -132,7 +141,11 @@ public class ReportService {
     }
 
     /** Task 5 */
-    public ListResult<TrainDTO> inspectedTrains(Date from, Date to) {
+    public ListResult<TrainDTO> inspectedTrains(String fromStr, String toStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate from = LocalDate.parse(fromStr, formatter);
+        LocalDate to = LocalDate.parse(toStr, formatter);
+
         Condition c = INSPECTION.INSPECTED_AT.between(from, to);
         List<TrainDTO> data = dsl.select(TRAIN.fields())
                 .from(INSPECTION)
@@ -156,7 +169,7 @@ public class ReportService {
 
     /** Task 7 */
     public ListResult<TrainServiceDTO> canceledServices(Integer route) {
-        Condition c = TRAIN_SERVICE.STATUS.eq(com.mykola.railroad.db.public_.enums.TypeTrainSt.CANCELED);
+        Condition c = TRAIN_SERVICE.STATUS.eq(TypeTrainSt.canceled);
         if (route != null) {
             c = c.and(TRAIN_SERVICE.ROUTE.eq(route));
         }
@@ -183,7 +196,11 @@ public class ReportService {
     }
 
     /** Task 9 */
-    public AvgSoldTicketDTO avgSoldTickets(Date from, Date to, Integer route) {
+    public AvgSoldTicketDTO avgSoldTickets(String fromStr, String toStr, Integer route) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate from = LocalDate.parse(fromStr, formatter);
+        LocalDate to = LocalDate.parse(toStr, formatter);
+
         Condition c = TICKET.SOLD_AT.between(from, to);
         if (route != null) {
             c = c.and(TICKET.TRAIN_SERVICE.in(DSL.select(TRAIN_SERVICE.ID).from(TRAIN_SERVICE).where(TRAIN_SERVICE.ROUTE.eq(route))));
@@ -218,7 +235,7 @@ public class ReportService {
     /** Task 12 */
     public ListResult<TicketDTO> unclaimedTickets(Integer serviceId) {
         List<TicketDTO> data = dsl.selectFrom(TICKET)
-                .where(TICKET.TRAIN_SERVICE.eq(serviceId).and(TICKET.STATUS.eq(com.mykola.railroad.db.public_.enums.TypeTicketSt.CANCELED)))
+                .where(TICKET.TRAIN_SERVICE.eq(serviceId).and(TICKET.STATUS.eq(TypeTicketSt.canceled)))
                 .fetch()
                 .map(ticketMapper::toDto);
         return new ListResult<>(data, data.size());
@@ -226,6 +243,6 @@ public class ReportService {
 
     /** Task 13 */
     public Integer returnedTickets(Integer serviceId) {
-        return dsl.fetchCount(TICKET, TICKET.TRAIN_SERVICE.eq(serviceId).and(TICKET.STATUS.eq(com.mykola.railroad.db.public_.enums.TypeTicketSt.CANCELED)));
+        return dsl.fetchCount(TICKET, TICKET.TRAIN_SERVICE.eq(serviceId).and(TICKET.STATUS.eq(TypeTicketSt.canceled)));
     }
 }

@@ -34,12 +34,12 @@ public class ReportController {
 
     @GetMapping("/station/trains")
     public ListResult<TrainDTO> trainsAtStation(@RequestParam Integer station,
-                                                @RequestParam(required = false) Date at) {
+                                                @RequestParam(required = false) String at) {
         return reportService.trainsAtStation(station, at);
     }
 
     @GetMapping("/inspection")
-    public ListResult<TrainDTO> inspected(@RequestParam Date from, @RequestParam Date to) {
+    public ListResult<TrainDTO> inspected(@RequestParam String from, @RequestParam String to) {
         return reportService.inspectedTrains(from, to);
     }
 
@@ -60,7 +60,7 @@ public class ReportController {
     }
 
     @GetMapping("/avg-sold")
-    public AvgSoldTicketDTO avgSold(@RequestParam Date from, @RequestParam Date to,
+    public AvgSoldTicketDTO avgSold(@RequestParam String from, @RequestParam String to,
                                     @RequestParam(required = false) Integer route) {
         return reportService.avgSoldTickets(from, to, route);
     }
