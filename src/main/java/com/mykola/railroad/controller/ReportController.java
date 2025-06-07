@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Date;
 
 @RestController
-@RequestMapping("/api/report")
+@RequestMapping("/report")
 public class ReportController {
     @Autowired
     private ReportService reportService;

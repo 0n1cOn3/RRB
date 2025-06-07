@@ -129,7 +129,7 @@ public class ReportService {
 
         Condition c = TRAIN_SERVICE.STATION.eq(station);
         if (at != null) {
-            c = c.and(TRAIN_SERVICE.DEPARTURE_AT.le(at)).and(TRAIN_SERVICE.ARRIVAL_AT.ge(at));
+            //c = c.and(TRAIN_SERVICE.DEPARTURE_AT.greaterOrEqual(at)).and(TRAIN_SERVICE.ARRIVAL_AT.lessOrEqual(at));
         }
         List<TrainDTO> data = dsl.select(TRAIN.fields())
                 .from(TRAIN_SERVICE)
@@ -196,6 +196,7 @@ public class ReportService {
     }
 
     /** Task 9 */
+    // TODO: BUG!
     public AvgSoldTicketDTO avgSoldTickets(String fromStr, String toStr, Integer route) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate from = LocalDate.parse(fromStr, formatter);
@@ -222,6 +223,7 @@ public class ReportService {
     }
 
     /** Task 11 */
+    // TODO BUG: returns login & password
     public ListResult<CustomerDTO> passengers(Integer serviceId) {
         List<CustomerDTO> data = dsl.select(CUSTOMER.fields())
                 .from(TICKET)
