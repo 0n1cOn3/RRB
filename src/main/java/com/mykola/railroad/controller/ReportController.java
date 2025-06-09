@@ -4,11 +4,12 @@ import com.mykola.railroad.dto.*;
 import com.mykola.railroad.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 import java.sql.Date;
 
 @RestController
-@RequestMapping("/api/report")
+@RequestMapping("/report")
 public class ReportController {
     @Autowired
     private ReportService reportService;
@@ -35,17 +36,19 @@ public class ReportController {
     @GetMapping("/station/trains")
     public ListResult<TrainDTO> trainsAtStation(@RequestParam Integer station,
                                                 @RequestParam(required = false) Date at) {
+                                                @RequestParam(required = false) String at) {
         return reportService.trainsAtStation(station, at);
     }
 
     @GetMapping("/inspection")
     public ListResult<TrainDTO> inspected(@RequestParam Date from, @RequestParam Date to) {
+    public ListResult<TrainDTO> inspected(@RequestParam String from, @RequestParam String to) {
         return reportService.inspectedTrains(from, to);
     }
 
-    @PostMapping("/route/trains")
-    public ListResult<AggregateTrainInfoDTO> trainsByRoute(@RequestBody(required = false) TrainSearchDTO search) {
-        return reportService.trainsByRoute(search);
+    @GetMapping("/route/trains")
+    public ListResult<TrainServiceDTO> trainsByRoute(@RequestParam Integer route) {
+        return reportService.trainsByRoute(route);
     }
 
     @GetMapping("/canceled")
@@ -60,9 +63,8 @@ public class ReportController {
     }
 
     @GetMapping("/avg-sold")
-    public AvgSoldTicketDTO avgSold(@RequestParam Date from, @RequestParam Date to,
-                                    @RequestParam(required = false) Integer route) {
-        return reportService.avgSoldTickets(from, to, route);
+    public List<AggregateTicketInfoDTO> aggregateTicketInfo(@RequestParam String from, @RequestParam String to) {
+        return reportService.aggregateTicketInfo(from, to);
     }
 
     @GetMapping("/routes")
