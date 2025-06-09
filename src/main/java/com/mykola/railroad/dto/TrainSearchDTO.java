@@ -2,6 +2,7 @@ package com.mykola.railroad.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.Optional;
 
@@ -11,18 +12,18 @@ public class TrainSearchDTO {
 
     @Data
     public static class ByLength {
-        public @NotNull Integer min;
-        public @NotNull Integer max;
+        public @Getter @NotNull Integer min;
+        public @Getter @NotNull Integer max;
     }
 
     @Data
     public static class ByCost {
-        public @NotNull Float min;
-        public @NotNull Float max;
+        public @Getter @NotNull Float min;
+        public @Getter @NotNull Float max;
     }
 
-    public Optional<ByLength> length = Optional.empty();
-    public Optional<ByCost> cost = Optional.empty();
+    public @Getter Optional<ByLength> length = Optional.empty();
+    public @Getter Optional<ByCost> cost = Optional.empty();
 
     public void setLength(ByLength length) {
         this.length = Optional.of(length);

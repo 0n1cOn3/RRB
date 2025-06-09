@@ -35,20 +35,18 @@ public class ReportController {
 
     @GetMapping("/station/trains")
     public ListResult<TrainDTO> trainsAtStation(@RequestParam Integer station,
-                                                @RequestParam(required = false) Date at) {
                                                 @RequestParam(required = false) String at) {
         return reportService.trainsAtStation(station, at);
     }
 
     @GetMapping("/inspection")
-    public ListResult<TrainDTO> inspected(@RequestParam Date from, @RequestParam Date to) {
     public ListResult<TrainDTO> inspected(@RequestParam String from, @RequestParam String to) {
         return reportService.inspectedTrains(from, to);
     }
 
-    @GetMapping("/route/trains")
-    public ListResult<TrainServiceDTO> trainsByRoute(@RequestParam Integer route) {
-        return reportService.trainsByRoute(route);
+    @PostMapping("/route/trains")
+    public ListResult<AggregateTrainInfoDTO> trainsByRoute(@RequestBody(required = false) TrainSearchDTO search) {
+        return reportService.trainsByRoute(search);
     }
 
     @GetMapping("/canceled")
@@ -63,7 +61,7 @@ public class ReportController {
     }
 
     @GetMapping("/avg-sold")
-    public List<AggregateTicketInfoDTO> aggregateTicketInfo(@RequestParam String from, @RequestParam String to) {
+    public List<AggregateTicketInfoDTO> avgSold(@RequestParam String from, @RequestParam String to) {
         return reportService.aggregateTicketInfo(from, to);
     }
 

@@ -2,6 +2,7 @@ package com.mykola.railroad.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.Optional;
 
@@ -9,42 +10,42 @@ public class EmployeeSearchDTO {
     // за стажем роботи на станції,
     @Data
     public static class ByExperience {
-        public @NotNull Integer min;
-        public @NotNull Integer max;
+        public @NotNull @Getter Integer min;
+        public @NotNull @Getter Integer max;
     }
 
     // статевою ознакою
     @Data
     public static class BySex {
-        public @NotNull TypeSex sex;
+        public @NotNull @Getter TypeSex sex;
     }
 
     // віком
     @Data
     public static class ByAge {
-        public @NotNull Integer min;
-        public @NotNull Integer max;
+        public @NotNull @Getter Integer min;
+        public @NotNull @Getter Integer max;
     }
 
     // ознакою наявності та кількості дітей
     @Data
     public static class ByChildren {
-        public @NotNull Integer min;
-        public @NotNull Integer max;
+        public @NotNull @Getter Integer min;
+        public @NotNull @Getter Integer max;
     }
 
     // розміру заробітної плати
     @Data
     public static class BySalary {
-        public @NotNull Float min;
-        public @NotNull Float max;
+        public @NotNull @Getter Float min;
+        public @NotNull @Getter Float max;
     }
 
-    public Optional<ByExperience> experience = Optional.empty();
-    public Optional<BySex> sex = Optional.empty();
-    public Optional<ByAge> age = Optional.empty();
-    public Optional<ByChildren> children = Optional.empty();
-    public Optional<BySalary> salary = Optional.empty();
+    public @Getter Optional<ByExperience> experience = Optional.empty();
+    public @Getter Optional<BySex> sex = Optional.empty();
+    public @Getter Optional<ByAge> age = Optional.empty();
+    public @Getter Optional<ByChildren> children = Optional.empty();
+    public @Getter Optional<BySalary> salary = Optional.empty();
 
     public void setExperience(ByExperience experience) {
         this.experience = Optional.of(experience);

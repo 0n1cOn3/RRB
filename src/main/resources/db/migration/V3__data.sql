@@ -33,6 +33,22 @@ INSERT INTO employee (id,first_name, last_name, email, password, sex, children, 
 (13,'Sophia', 'Lee', 'sophia.lee@railroad.org',   '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','female', 0, '1994-10-03',12, 3, 150),  -- driver + manager
 (14,'George', 'Hall', 'george.hall@railroad.org', '$2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW','male', 0, '1994-10-07',13, 9, 100);    -- driver + manager + finance
 
+INSERT INTO medical_exam (employee,verdict_good) VALUES
+(1,TRUE),
+(2,TRUE),
+(3,FALSE),
+(4,TRUE),
+(5,TRUE),
+(6,FALSE),
+(7,TRUE),
+(8,TRUE),
+(9,TRUE),
+(10,FALSE),
+(11,FALSE),
+(12,TRUE),
+(13,TRUE),
+(14,TRUE);
+
 INSERT INTO employee_acl (employee, acl) VALUES
 (1,'sysop'),        -- Mykola, sysop
 (2, 'driver'),      -- John Doe, driver

@@ -93,7 +93,7 @@ CREATE TRIGGER trg_department_head
 CREATE TABLE medical_exam (
     id              SERIAL          PRIMARY KEY,
     employee        INTEGER         REFERENCES employee(id) NOT NULL,
-    created_at      DATE            NOT NULL,
+    created_at      DATE            NOT NULL DEFAULT CURRENT_DATE,
     verdict         VARCHAR,
     verdict_good    BOOLEAN         NOT NULL
 );
