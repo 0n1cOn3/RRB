@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static com.mykola.railroad.db.public_.Tables.*;
+import static org.jooq.impl.DSL.*;
 
 @Service
 public class ReportService {
@@ -38,11 +39,11 @@ public class ReportService {
     public ListResult<EmployeeDTO> employees(Integer departmentId, boolean headsOnly, EmployeeSearchDTO search) {
         Condition c = DSL.trueCondition();
         if (departmentId != null) {
-            c = c.and(EMPLOYEE.ID.in(DSL.select(DEPARTMENT_EMPLOYEE.EMPLOYEE).from(DEPARTMENT_EMPLOYEE)
+            c = c.and(EMPLOYEE.ID.in(select(DEPARTMENT_EMPLOYEE.EMPLOYEE).from(DEPARTMENT_EMPLOYEE)
                     .where(DEPARTMENT_EMPLOYEE.DEPARTMENT.eq(departmentId))));
         }
         if (headsOnly) {
-            c = c.and(EMPLOYEE.ID.in(DSL.select(DEPARTMENT_EMPLOYEE.EMPLOYEE).from(DEPARTMENT_EMPLOYEE)
+            c = c.and(EMPLOYEE.ID.in(select(DEPARTMENT_EMPLOYEE.EMPLOYEE).from(DEPARTMENT_EMPLOYEE)
                     .where(DEPARTMENT_EMPLOYEE.HEAD.isTrue())));
         }
         if (search != null) {
@@ -99,7 +100,7 @@ public class ReportService {
                 .where(c)
                 .fetch()
                 .map(r -> employeeMapper.toDto(r.into(EMPLOYEE)));
-        Float avgSalary = dsl.select(DSL.avg(JOB.SALARY.add(EMPLOYEE.SALARY_BONUS)))
+        Float avgSalary = dsl.select(avg(JOB.SALARY.add(EMPLOYEE.SALARY_BONUS)))
                 .from(BRIGADE_EMPLOYEES)
                 .join(EMPLOYEE).on(BRIGADE_EMPLOYEES.EMPLOYEE.eq(EMPLOYEE.ID))
                 .join(JOB).on(EMPLOYEE.JOB.eq(JOB.ID))
@@ -183,7 +184,7 @@ public class ReportService {
     public ListResult<DelayServiceDTO> delayedServices(Integer route, com.mykola.railroad.db.public_.enums.TypeDelay type) {
         Condition c = DELAY.DELAY_TYPE.eq(type);
         if (route != null) {
-            c = c.and(DELAY.DELAY_SERVICE.in(DSL.select(TRAIN_SERVICE.ID).from(TRAIN_SERVICE).where(TRAIN_SERVICE.ROUTE.eq(route))));
+            c = c.and(DELAY.DELAY_SERVICE.in(select(TRAIN_SERVICE.ID).from(TRAIN_SERVICE).where(TRAIN_SERVICE.ROUTE.eq(route))));
         }
         List<DelayServiceDTO> data = dsl.select(DELAY.fields())
                 .select(TRAIN_SERVICE.fields())
@@ -196,21 +197,32 @@ public class ReportService {
     }
 
     /** Task 9 */
-    // TODO: BUG!
-    public AvgSoldTicketDTO avgSoldTickets(String fromStr, String toStr, Integer route) {
+    public List<AggregateTicketInfoDTO> aggregateTicketInfo(String fromDate, String toDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate from = LocalDate.parse(fromStr, formatter);
-        LocalDate to = LocalDate.parse(toStr, formatter);
+        LocalDate from = LocalDate.parse(fromDate, formatter);
+        LocalDate to = LocalDate.parse(toDate, formatter);
 
-        Condition c = TICKET.SOLD_AT.between(from, to);
-        if (route != null) {
-            c = c.and(TICKET.TRAIN_SERVICE.in(DSL.select(TRAIN_SERVICE.ID).from(TRAIN_SERVICE).where(TRAIN_SERVICE.ROUTE.eq(route))));
-        }
-        Float avg = dsl.select(DSL.avg(DSL.count()))
+        return dsl
+                .select(
+                        TRAIN_SERVICE.ROUTE,
+                        avg(TICKET.COST).as("ticket_cost"),
+                        count(TICKET.ID).as("ticket_count"),
+                        select(count())
+                                .from(ROUTE_STATION)
+                                .where(ROUTE_STATION.ROUTE.eq(TRAIN_SERVICE.ROUTE))
+                                .asField("route_length")
+                )
                 .from(TICKET)
-                .where(c)
-                .fetchOne(0, Float.class);
-        return new AvgSoldTicketDTO(avg == null ? 0f : avg);
+                .leftJoin(TRAIN_SERVICE).on(TRAIN_SERVICE.ID.eq(TICKET.TRAIN_SERVICE))
+                .where(TICKET.SOLD_AT.between(from, to))
+                .groupBy(TRAIN_SERVICE.ROUTE, field("route_length"))
+                .fetch()
+                .map(r -> new AggregateTicketInfoDTO(
+                        r.get(TRAIN_SERVICE.ROUTE, Integer.class),
+                        r.get("ticket_count", Integer.class),
+                        r.get("ticket_cost", Float.class),
+                        r.get("route_length", Integer.class)
+                ));
     }
 
     /** Task 10 */
@@ -223,7 +235,6 @@ public class ReportService {
     }
 
     /** Task 11 */
-    // TODO BUG: returns login & password
     public ListResult<CustomerDTO> passengers(Integer serviceId) {
         List<CustomerDTO> data = dsl.select(CUSTOMER.fields())
                 .from(TICKET)

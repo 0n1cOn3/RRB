@@ -4,6 +4,7 @@ import com.mykola.railroad.dto.*;
 import com.mykola.railroad.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 import java.sql.Date;
 
@@ -60,9 +61,8 @@ public class ReportController {
     }
 
     @GetMapping("/avg-sold")
-    public AvgSoldTicketDTO avgSold(@RequestParam String from, @RequestParam String to,
-                                    @RequestParam(required = false) Integer route) {
-        return reportService.avgSoldTickets(from, to, route);
+    public List<AggregateTicketInfoDTO> aggregateTicketInfo(@RequestParam String from, @RequestParam String to) {
+        return reportService.aggregateTicketInfo(from, to);
     }
 
     @GetMapping("/routes")
