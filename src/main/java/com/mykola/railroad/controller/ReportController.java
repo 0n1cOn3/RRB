@@ -35,11 +35,13 @@ public class ReportController {
 
     @GetMapping("/station/trains")
     public ListResult<TrainDTO> trainsAtStation(@RequestParam Integer station,
+                                                @RequestParam(required = false) Date at) {
                                                 @RequestParam(required = false) String at) {
         return reportService.trainsAtStation(station, at);
     }
 
     @GetMapping("/inspection")
+    public ListResult<TrainDTO> inspected(@RequestParam Date from, @RequestParam Date to) {
     public ListResult<TrainDTO> inspected(@RequestParam String from, @RequestParam String to) {
         return reportService.inspectedTrains(from, to);
     }
