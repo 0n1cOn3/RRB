@@ -278,7 +278,7 @@ public class ReportService {
         if (route != null) {
             c = c.and(DELAY.DELAY_SERVICE.in(select(TRAIN_SERVICE.ID).from(TRAIN_SERVICE).where(TRAIN_SERVICE.ROUTE.eq(route))));
         }
-        List<DelayServiceDTO> data = dsl.select(DELAY.fields())
+        List<DelayServiceDTO> data = dsl.select(DSL.asterisk())
                 .select(TRAIN_SERVICE.fields())
                 .from(DELAY)
                 .join(TRAIN_SERVICE).on(DELAY.DELAY_SERVICE.eq(TRAIN_SERVICE.ID))
