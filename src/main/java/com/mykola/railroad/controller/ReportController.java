@@ -48,7 +48,12 @@ public class ReportController {
 
     @GetMapping("/inspection/good-services")
     public Integer servicesBeforeTrainbroke(@RequestParam Integer train) {
-        return reportService.servicesBeforeTrainbroke(train);
+        return reportService.servicesBeforeTrainBroke(train);
+    }
+
+    @GetMapping("/inspection/times-repaired")
+    public Integer timesTrainRepaired(@RequestParam Integer train) {
+        return reportService.timesTrainRepaired(train);
     }
 
     @PostMapping("/route/trains")

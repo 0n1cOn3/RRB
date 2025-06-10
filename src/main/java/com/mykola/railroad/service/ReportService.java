@@ -193,7 +193,7 @@ public class ReportService {
     }
 
     /** Task 5.1 */
-    public Integer servicesBeforeTrainbroke(Integer train) {
+    public Integer servicesBeforeTrainBroke(Integer train) {
         return dsl
                 .select(count())
                 .from(TRAIN_SERVICE)
@@ -202,6 +202,14 @@ public class ReportService {
                                 .from(INSPECTION)
                                 .where(INSPECTION.TRAIN.eq(train).and(INSPECTION.STATUS.eq(false)))
                 )))
+                .fetchOne(0, Integer.class);
+    }
+    /** Task 5.2 */
+    public Integer timesTrainRepaired(Integer train) {
+        return dsl
+                .select(count())
+                .from(INSPECTION)
+                .where(INSPECTION.TRAIN.eq(train).and(INSPECTION.STATUS.eq(false)))
                 .fetchOne(0, Integer.class);
     }
 
