@@ -35,7 +35,7 @@ public class ReportController {
     }
 
     @GetMapping("/station/trains")
-    public ListResult<TrainDTO> trainsAtStation(@RequestParam Integer station,
+    public ListResult<TrainAndServiceCountDTO> trainsAtStation(@RequestParam Integer station,
                                                 @RequestParam(required = false) String at) {
         return reportService.trainsAtStation(station, at);
     }

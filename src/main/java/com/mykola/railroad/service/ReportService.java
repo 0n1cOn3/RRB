@@ -146,20 +146,29 @@ public class ReportService {
     }
 
     /** Task 4 */
-    public ListResult<TrainDTO> trainsAtStation(Integer station, String atStr) {
+    public ListResult<TrainAndServiceCountDTO> trainsAtStation(Integer station, String atStr) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate at = LocalDate.parse(atStr, formatter);
 
         Condition c = TRAIN_SERVICE.STATION.eq(station);
         if (at != null) {
-            //c = c.and(TRAIN_SERVICE.DEPARTURE_AT.greaterOrEqual(at)).and(TRAIN_SERVICE.ARRIVAL_AT.lessOrEqual(at));
+            c = c.and(TRAIN_SERVICE.DEPARTURE_AT.greaterOrEqual(at));
         }
-        List<TrainDTO> data = dsl.select(TRAIN.fields())
+        List<TrainAndServiceCountDTO> data = dsl.select(DSL.asterisk(),
+                        select(count())
+                                .from(TRAIN_SERVICE)
+                                .where(TRAIN_SERVICE.TRAIN.eq(TRAIN.ID))
+                                .asField("services")
+                        )
                 .from(TRAIN_SERVICE)
                 .join(TRAIN).on(TRAIN_SERVICE.TRAIN.eq(TRAIN.ID))
                 .where(c)
                 .fetch()
-                .map(r -> trainMapper.toDto(r.into(TRAIN)));
+                .map(r -> new TrainAndServiceCountDTO(
+                        trainMapper.toDto(r.into(TRAIN)),
+                        trainServiceMapper.toDto(r.into(TRAIN_SERVICE)),
+                        r.get("services", Integer.class)
+                ));
         return new ListResult<>(data, data.size());
     }
 
