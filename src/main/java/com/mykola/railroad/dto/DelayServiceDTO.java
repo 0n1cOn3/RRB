@@ -8,4 +8,5 @@ import lombok.Data;
 public class DelayServiceDTO {
     public DelayDTO delay;
     public TrainServiceDTO service;
+    public TicketDTO ticket;
 }

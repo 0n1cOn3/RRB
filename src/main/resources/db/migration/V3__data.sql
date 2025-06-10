@@ -136,7 +136,9 @@ INSERT INTO train (train_type, in_service, driver_brigade, service_brigade, inst
 ('passenger', TRUE, 6, 9, '2023-04-18');
 
 INSERT INTO inspection (train, type, inspected_at, status, description) VALUES
-(1, 'planned', '2023-05-22', TRUE, 'Good');
+(1, 'planned', '2023-05-22', TRUE, 'Good'),
+(10, 'planned', '2023-05-22', TRUE, 'Good'),
+(10, 'planned', '2025-05-31', FALSE, 'Damaged');
 
 INSERT INTO station (name) VALUES
 ('Central Station'),
@@ -189,7 +191,9 @@ INSERT INTO train_service (train, route, departure_at, departure_when, arrival_a
 (7, 7, '2025-05-28', '09:00', '2025-05-29', '13:00', 'canceled', 7, 1, '10:55'),
 (8, 8, '2025-05-29', '15:00', '2025-05-30', '19:00', 'ok', 8, 3, '19:00'),
 (9, 8, '2025-05-30', '08:30', '2025-05-31', '13:30', 'ok', 9, 2, '13:00'),
-(10, 4, '2025-05-30', '10:30', '2025-05-31', '14:30', 'ok', 10, 7, '14:30');
+(10, 4, '2025-05-30', '10:30', '2025-05-31', '14:30', 'ok', 10, 7, '14:30'),
+(10, 4, '2025-06-01', '10:30', '2025-06-02', '14:30', 'ok', 10, 7, '14:30');
+
 
 -- SELECT crypt('1', gen_salt('bf', 10));
 -- $2a$10$GcG2dHyWvdVqrkQfLdZateIJ/Ytts1BpK/8Vk01B3515pIrslqhbW

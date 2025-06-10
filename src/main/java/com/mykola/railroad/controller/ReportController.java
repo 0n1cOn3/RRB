@@ -2,6 +2,7 @@ package com.mykola.railroad.controller;
 
 import com.mykola.railroad.dto.*;
 import com.mykola.railroad.service.ReportService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -40,8 +41,14 @@ public class ReportController {
     }
 
     @GetMapping("/inspection")
-    public ListResult<TrainDTO> inspected(@RequestParam String from, @RequestParam String to) {
-        return reportService.inspectedTrains(from, to);
+    public ListResult<TrainDTO> inspected(@RequestParam String from, @RequestParam String to,
+                                          @RequestParam(required = false) Integer age) {
+        return reportService.inspectedTrains(from, to, age);
+    }
+
+    @GetMapping("/inspection/good-services")
+    public Integer servicesBeforeTrainbroke(@RequestParam Integer train) {
+        return reportService.servicesBeforeTrainbroke(train);
     }
 
     @PostMapping("/route/trains")
@@ -70,9 +77,10 @@ public class ReportController {
         return reportService.routesByCategory(international);
     }
 
-    @GetMapping("/passengers")
-    public ListResult<CustomerDTO> passengers(@RequestParam Integer service) {
-        return reportService.passengers(service);
+    @PostMapping("/passengers")
+    public ListResult<CustomerDTO> passengers(@RequestParam Integer service,
+                                              @RequestBody @Valid CustomerSearchDTO search) {
+        return reportService.passengers(service, search);
     }
 
     @GetMapping("/unclaimed")

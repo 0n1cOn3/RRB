@@ -33,17 +33,7 @@ public class ReportService {
     @Autowired private TypeSexMapper typeSexMapper;
     @Autowired private RouteMapper routeMapper;
 
-    /** Task 1 */
-    public ListResult<EmployeeDTO> employees(Integer departmentId, boolean headsOnly, EmployeeSearchDTO search) {
-        Condition c = DSL.trueCondition();
-        if (departmentId != null) {
-            c = c.and(EMPLOYEE.ID.in(select(DEPARTMENT_EMPLOYEE.EMPLOYEE).from(DEPARTMENT_EMPLOYEE)
-                    .where(DEPARTMENT_EMPLOYEE.DEPARTMENT.eq(departmentId))));
-        }
-        if (headsOnly) {
-            c = c.and(EMPLOYEE.ID.in(select(DEPARTMENT_EMPLOYEE.EMPLOYEE).from(DEPARTMENT_EMPLOYEE)
-                    .where(DEPARTMENT_EMPLOYEE.HEAD.isTrue())));
-        }
+    private Condition whereEmployeeSearch(Condition c, EmployeeSearchDTO search) {
         if (search != null) {
             if (search.getExperience().isPresent()) {
                 var ex = search.getExperience().get();
@@ -67,6 +57,37 @@ public class ReportService {
                         .between(new BigDecimal(sal.getMin()), new BigDecimal(sal.getMax())));
             }
         }
+
+        return c;
+    }
+
+    private Condition whereCustomerSearch(Condition c, CustomerSearchDTO search) {
+        if (search != null) {
+            if (search.getSex().isPresent()) {
+                var s = search.getSex().get();
+                c = c.and(CUSTOMER.SEX.eq(typeSexMapper.toJooq(s.getSex())));
+            }
+            if (search.getAge().isPresent()) {
+                var a = search.getAge().get();
+                c = c.and(CUSTOMER.AGE.between(search.age.get().min.shortValue(), search.age.get().max.shortValue()));
+            }
+        }
+
+        return c;
+    }
+
+    /** Task 1 */
+    public ListResult<EmployeeDTO> employees(Integer departmentId, boolean headsOnly, EmployeeSearchDTO search) {
+        Condition c = DSL.trueCondition();
+        if (departmentId != null) {
+            c = c.and(EMPLOYEE.ID.in(select(DEPARTMENT_EMPLOYEE.EMPLOYEE).from(DEPARTMENT_EMPLOYEE)
+                    .where(DEPARTMENT_EMPLOYEE.DEPARTMENT.eq(departmentId))));
+        }
+        if (headsOnly) {
+            c = c.and(EMPLOYEE.ID.in(select(DEPARTMENT_EMPLOYEE.EMPLOYEE).from(DEPARTMENT_EMPLOYEE)
+                    .where(DEPARTMENT_EMPLOYEE.HEAD.isTrue())));
+        }
+        c = whereEmployeeSearch(c, search);
 
         List<EmployeeDTO> data = dsl.select(EMPLOYEE.fields())
                 .from(EMPLOYEE)
@@ -113,6 +134,8 @@ public class ReportService {
     public ListResult<EmployeeDTO> medicalExams(MedicalExamSearchDTO search) {
         Condition c = DSL.extract(MEDICAL_EXAM.CREATED_AT, DatePart.YEAR).eq(search.getYear())
                 .and(MEDICAL_EXAM.VERDICT_GOOD.eq(search.getVerdict()));
+        c = whereEmployeeSearch(c, search.employee);
+
         List<EmployeeDTO> data = dsl.select(EMPLOYEE.fields())
                 .from(MEDICAL_EXAM)
                 .join(EMPLOYEE).on(MEDICAL_EXAM.EMPLOYEE.eq(EMPLOYEE.ID))
@@ -141,12 +164,16 @@ public class ReportService {
     }
 
     /** Task 5 */
-    public ListResult<TrainDTO> inspectedTrains(String fromStr, String toStr) {
+    public ListResult<TrainDTO> inspectedTrains(String fromStr, String toStr, Integer age) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate from = LocalDate.parse(fromStr, formatter);
         LocalDate to = LocalDate.parse(toStr, formatter);
 
         Condition c = INSPECTION.INSPECTED_AT.between(from, to);
+        if (age != null) {
+            c = c.and(DSL.condition("EXTRACT(YEAR FROM AGE({0})) = {1}", TRAIN.INSTALLED, age));
+        }
+
         List<TrainDTO> data = dsl.select(TRAIN.fields())
                 .from(INSPECTION)
                 .join(TRAIN).on(INSPECTION.TRAIN.eq(TRAIN.ID))
@@ -154,6 +181,19 @@ public class ReportService {
                 .fetch()
                 .map(r -> trainMapper.toDto(r.into(TRAIN)));
         return new ListResult<>(data, data.size());
+    }
+
+    /** Task 5.1 */
+    public Integer servicesBeforeTrainbroke(Integer train) {
+        return dsl
+                .select(count())
+                .from(TRAIN_SERVICE)
+                .where(TRAIN_SERVICE.TRAIN.eq(train).and(TRAIN_SERVICE.DEPARTURE_AT.le(
+                        select(INSPECTION.INSPECTED_AT)
+                                .from(INSPECTION)
+                                .where(INSPECTION.TRAIN.eq(train).and(INSPECTION.STATUS.eq(false)))
+                )))
+                .fetchOne(0, Integer.class);
     }
 
     /** Task 6 */
@@ -225,9 +265,14 @@ public class ReportService {
                 .select(TRAIN_SERVICE.fields())
                 .from(DELAY)
                 .join(TRAIN_SERVICE).on(DELAY.DELAY_SERVICE.eq(TRAIN_SERVICE.ID))
+                .join(TICKET).on(TICKET.TRAIN_SERVICE.eq(TRAIN_SERVICE.ID))
                 .where(c)
                 .fetch()
-                .map(r -> new DelayServiceDTO(delayMapper.toDto(r.into(DELAY)), trainServiceMapper.toDto(r.into(TRAIN_SERVICE))));
+                .map(r -> new DelayServiceDTO(
+                        delayMapper.toDto(r.into(DELAY)),
+                        trainServiceMapper.toDto(r.into(TRAIN_SERVICE)),
+                        ticketMapper.toDto(r.into(TICKET))
+                ));
         return new ListResult<>(data, data.size());
     }
 
@@ -270,11 +315,16 @@ public class ReportService {
     }
 
     /** Task 11 */
-    public ListResult<CustomerDTO> passengers(Integer serviceId) {
+    public ListResult<CustomerDTO> passengers(Integer serviceId, CustomerSearchDTO search) {
+        Condition c = TICKET.TRAIN_SERVICE.eq(serviceId);
+        if (search != null) {
+            c = whereCustomerSearch(c, search);
+        }
+
         List<CustomerDTO> data = dsl.select(CUSTOMER.fields())
                 .from(TICKET)
                 .join(CUSTOMER).on(TICKET.CUSTOMER.eq(CUSTOMER.ID))
-                .where(TICKET.TRAIN_SERVICE.eq(serviceId))
+                .where(c)
                 .fetch()
                 .map(r -> customerMapper.toDto(r.into(CUSTOMER)));
         return new ListResult<>(data, data.size());
